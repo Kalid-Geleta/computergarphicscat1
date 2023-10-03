@@ -1,46 +1,39 @@
-
-import pandas as pd
+import tarfile
 import os
+import pandas as pd
 
-def returntemp(file,path):
-    filename = (os.fsdecode(file))
-    temp = pd.read_json(path + filename, lines=True)
-    return temp
-def returnoutname(temp,delimiter):
-    outname = str.join(temp['locale'].iloc[0]).split(delimiter)
-    outname = "C:/Users/User/PycharmProjects/pythonProject1/venv/xlsxfiles/" + "en" + "-" + outname[0] + ".xlsx"
-    return outname
+# Specify the path to your tar.gz file
+dataset_path = "C:/Users/Michael Owen/Downloads/amazon-massive-dataset-1.1_CAT1.tar.gz"
 
-def funlogic():
-        str=""
+# Specify the directory where you want to extract the files
+extraction_directory = "C:/Users/Michael Owen/PycharmProjects/computerGraphicsCat/data/extracted_dataset"
 
+# Create the extraction directory if it doesn't exist
+os.makedirs(extraction_directory, exist_ok=True)
 
-        dfp = pd.read_json("C:/Users/User/PycharmProjects/pythonProject1/venv/data/en-US.jsonl", lines=True)
-
-        directory = os.fsencode("C:/Users/User/PycharmProjects/pythonProject1/venv/data/")
-        logic =True
-        for file in os.listdir(directory):
-            if(logic):
-                logic=False
-                continue
-            else:
-
-                filename = (os.fsdecode(file))
-                temp=pd.read_json("C:/Users/User/PycharmProjects/pythonProject1/venv/data/"+ filename, lines=True)
-                outname = str. join(temp['locale'].iloc[0]).split('-')
-                outname="C:/Users/User/PycharmProjects/pythonProject1/venv/xlsxfiles/"+"en"+"-"+outname[0]+".xlsx"
-                temp['utt']=dfp['utt']
-
-                temp[['id','utt','annot_utt']].to_excel(outname)
-
-                print(outname)
+# Extract the tar.gz file
+with tarfile.open(dataset_path, 'r:gz') as tar:
+    tar.extractall(path=extraction_directory)
 
 
+# Load the English dataset (assuming it's called 'en.xlsx')
+english_dataset_path = os.path.join(extraction_directory, 'en.xlsx')
+english_df = pd.read_excel(english_dataset_path)
 
+# Create a dictionary to store dataframes for each language
+language_dataframes = {}
 
+# Loop through files in the extraction directory
+for filename in os.listdir(extraction_directory):
+    if filename.endswith(".xlsx") and filename != 'en.xlsx':
+        language_code = os.path.splitext(filename)[0]
+        language_df = pd.read_excel(os.path.join(extraction_directory, filename))
 
+        # Merge English data with the current language's data based on ID
+        merged_df = pd.merge(english_df[['id', 'utt', 'annot_utt']],
+                             language_df[['id', 'utt', 'annot_utt']],
+                             on='id')
 
-
-if __name__ == '__main__':
-    funlogic()
-
+        # Save the merged dataframe to en-xx.xlsx
+        output_path = os.path.join("output", f"en-{language_code}.xlsx")
+        merged_df.to_excel(output_path, index=False)
