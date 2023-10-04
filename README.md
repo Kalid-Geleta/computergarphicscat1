@@ -4,22 +4,15 @@ To set up a new Python3 development environment for this assessment, follow thes
 Install Python 3. You can do this using your operating system's package manager, or by downloading and installing the Python 3 installer from the Python website.
 Install a Python virtual environment tool. This is optional, but it is recommended to use a virtual environment to isolate your project's dependencies from the rest of your system. You can install a virtual environment tool such as virtualenv or venv.
 Create a new virtual environment for your project. To do this, run the following command:
-python3 -m venv my_project_env
+conda create -n test python=3.11
 Activate the virtual environment. To do this, run the following command:
-source my_project_env/bin/activate
+activate test
 Install the required dependencies for your project. To do this, run the following command:
-pip install -r requirements.txt
+pip install package
 Building a Python3 Project
 To build a Python3 project with the structure of projects in PyCharm, follow these steps:
 
-Create a new directory for your project.
-Inside the project directory, create a new file called __init__.py. This file is empty, but it is required to make the directory a Python package.
-Create a new directory for your project's code.
-Inside the code directory, create a new file called main.py. This is where you will write your main code.
-In main.py, import the necessary libraries and modules.
-Write your main code.
-To run your project, run the following command:
-python main.py
+
 Generating an en-xx.xlxs File for All Languages
 To generate an en-xx.xlxs file for all languages in the MASSIVE dataset, follow these steps:
 
@@ -33,12 +26,7 @@ Repeat steps 1-3 for all languages in the dataset.
 Generating JSONL Files for English, Swahili, and German
 To generate separate JSONL files with test, train, and dev for English (en), Swahili (sw), and German (de), follow these steps:
 
-Write a Python script that iterates over the MASSIVE dataset and extracts the test, train, and dev data for each language.
-Save the data to JSONL files, with the following naming convention:
-{language_code}-{split}.jsonl
-For example, the JSONL file for the English test data would be named en-test.jsonl.
 
-Generating a Large JSON File with All Translations from en to xx with id and utt for All Train Sets
 To generate a large JSON file showing all the translations from en to xx with id and utt for all train sets, follow these steps:
 
 Write a Python script that iterates over the train data for all languages and extracts the translations from en to xx.
